@@ -26,10 +26,9 @@ namespace Application.Commands.Authenticate
             _validator = validator;
         }
 
-        public async Task<string> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
+        public Task<string> Handle(AuthenticateCommand request, CancellationToken cancellationToken)
         {
-            await _validator.ValidateAndThrowAsync(request, cancellationToken);
-            return GenerateJwtToken(request.Credentials.UserName);
+            return Task.FromResult(GenerateJwtToken(request.Credentials.UserName));
         }
 
         private string GenerateJwtToken(string userName)

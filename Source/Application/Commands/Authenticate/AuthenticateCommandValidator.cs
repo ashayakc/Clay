@@ -15,9 +15,6 @@ namespace Application.Commands.Authenticate
 
             RuleFor(x => x.Credentials)
                 .Must(ValidCredential).WithMessage("Username or password is invalid");
-
-            RuleFor(x => x.Credentials.Password)
-                .MinimumLength(3).WithMessage("Password should be of atleast 3 characters");
         }
 
         private bool ValidCredential(UserCredentialDto userCredential)

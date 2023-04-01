@@ -1,5 +1,4 @@
-﻿using Application.Common.Exceptions;
-using Application.Notifications.DoorOpened;
+﻿using Application.Notifications.DoorOpened;
 using FluentValidation;
 using MediatR;
 
@@ -34,7 +33,7 @@ namespace Application.Commands.OpenDoor
                     UserId = request.UserId,
                     Comments = request.Comments,
                 });
-                throw new LockApiException($"Door open failed with below errors: {result.Errors[0]}");
+                throw new ValidationException($"Door open failed: {result.Errors[0]}");
             }
 
             //Validations success. Connect to the harware here and open the door

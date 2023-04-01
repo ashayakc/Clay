@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Domain.Dto;
 using MediatR;
 using Application.Commands.OpenDoor;
+using Application.Queries;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -19,11 +21,15 @@ namespace API.Controllers
             _mediator = mediator;
         }
 
-        //[HttpGet]
-        //public async Task<IEnumerable<DoorDto>> GetAsync()
-        //{
-        //    return await _doorService.GetByUserIdAsync(_claimsHandler.GetUserId(User.Claims));
-        //}
+        [HttpGet]
+        public async Task<IEnumerable<DoorDto>> GetAsync()
+        {
+            return await _mediator.Send(new GetDoorsQuery
+            {
+                UserId = _claimsHandler.GetUserId(User.Claims)
+            });
+        }
+
 
         [HttpPost, Route("{doorId}/open")]
         public async Task<IActionResult> OpenAsync(long doorId, [FromBody] string comments)

@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Persistance
 {
@@ -11,6 +12,27 @@ namespace Infrastructure.Persistance
         {
             _dbContext = dbContext;
             _dbSet = _dbContext.Set<T>();
+        }
+
+        public async Task<IQueryable<T>> GetAsync(Expression<Func<T, bool>> filter, string includeProperties)
+        {
+            IQueryable<T> query = _dbSet;
+
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProperty in includeProperties.Split
+                (new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProperty);
+                }
+            }
+
+            return query;
         }
 
         public IQueryable<T> GetAll()

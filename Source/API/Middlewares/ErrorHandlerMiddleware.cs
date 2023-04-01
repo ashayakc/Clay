@@ -1,4 +1,4 @@
-﻿using Application.Common.Exceptions;
+﻿using FluentValidation;
 using System.Net;
 using System.Text.Json;
 
@@ -26,13 +26,7 @@ namespace API.Middlewares
 
                 switch (error)
                 {
-                    case LockApiException e:
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        break;
-                    case ArgumentNullException e:
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        break;
-                    case ArgumentException e:
+                    case ValidationException e:
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
                         break;
                     case UnauthorizedAccessException e:
