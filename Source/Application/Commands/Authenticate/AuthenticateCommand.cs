@@ -16,11 +16,11 @@ namespace Application.Commands.Authenticate
         public UserCredentialDto Credentials { get; set; }
     }
 
-    public class AUthenticateCommandHandler : IRequestHandler<AuthenticateCommand, string>
+    public class AuthenticateCommandHandler : IRequestHandler<AuthenticateCommand, string>
     {
         private readonly IRepository<User> _userRepository;
         private readonly IValidator<AuthenticateCommand> _validator;
-        public AUthenticateCommandHandler(IRepository<User> userRepository, IValidator<AuthenticateCommand> validator)
+        public AuthenticateCommandHandler(IRepository<User> userRepository, IValidator<AuthenticateCommand> validator)
         {
             _userRepository = userRepository;
             _validator = validator;

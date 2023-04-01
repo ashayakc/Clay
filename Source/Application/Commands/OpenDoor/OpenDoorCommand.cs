@@ -1,6 +1,6 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Exceptions;
 using Application.Notifications.DoorOpened;
-using Domain;
+using FluentValidation;
 using MediatR;
 
 namespace Application.Commands.OpenDoor
@@ -15,19 +15,29 @@ namespace Application.Commands.OpenDoor
 
     public class OpenDoorCommandHandler : IRequestHandler<OpenDoorCommand>
     {
-        private readonly IRepository<Door> _doorRepository;
         private readonly IMediator _mediator;
-        public OpenDoorCommandHandler(IRepository<Door> doorRepository, IMediator mediator)
+        private readonly IValidator<OpenDoorCommand> _validator;
+        public OpenDoorCommandHandler(IValidator<OpenDoorCommand> validator, IMediator mediator)
         {
-            _doorRepository = doorRepository;
+            _validator = validator;
             _mediator = mediator;
         }
 
         public async Task Handle(OpenDoorCommand request, CancellationToken cancellationToken)
         {
-            //add validation to validate if the role has access to this door
-            //Connect to the harware here
+            var result = await _validator.ValidateAsync(request, cancellationToken);
+            if(!result.IsValid) 
+            {
+                await _mediator.Publish(new DoorOpenFailed
+                {
+                    DoorId = request.DoorId,
+                    UserId = request.UserId,
+                    Comments = request.Comments,
+                });
+                throw new LockApiException($"Door open failed with below errors: {result.Errors[0]}");
+            }
 
+            //Validations success. Connect to the harware here and open the door
             await _mediator.Publish(new DoorOpenSuccess 
             {
                 DoorId = request.DoorId,

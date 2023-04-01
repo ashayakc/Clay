@@ -1,4 +1,4 @@
-﻿namespace Common.Constants
+﻿namespace API.Constants
 {
     public class Jwt
     {

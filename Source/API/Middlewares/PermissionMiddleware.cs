@@ -1,4 +1,4 @@
-﻿using Common.Constants;
+﻿using API.Constants;
 
 namespace API.Middlewares
 {

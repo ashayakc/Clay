@@ -33,6 +33,7 @@ namespace API
             services.AddScoped<IClaimsHandler, ClaimsHandler>();
             services.AddScoped<IRepository<Door>, Repository<Door>>();
             services.AddScoped<IRepository<User>, Repository<User>>();
+            services.AddScoped<IRepository<RoleDoorMapping>, Repository<RoleDoorMapping>>();
             services.AddApplicationServices();
 
             services.AddApiVersioning(config =>

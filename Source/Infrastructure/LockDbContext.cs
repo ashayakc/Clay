@@ -46,6 +46,9 @@ namespace Infrastructure
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_RoleDoorMapping_RoleId");
+
+                entity.HasIndex(x => new { x.RoleId, x.DoorId })
+                    .HasDatabaseName("IX_RoleDoorMapping_RoleId_DoorId");
             });
 
             modelBuilder.Entity<User>().HasData(

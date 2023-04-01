@@ -12,6 +12,11 @@ namespace Application.Notifications.DoorOpened
 
     public class DoorOpenSuccessHandler : INotificationHandler<DoorOpenSuccess>
     {
+        public DoorOpenSuccessHandler()
+        {
+            
+        }
+
         public Task Handle(DoorOpenSuccess notification, CancellationToken cancellationToken)
         {
             //audit here
