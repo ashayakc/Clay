@@ -1,4 +1,4 @@
-﻿using Application.Notifications.DoorOpened;
+﻿using Application.Notifications.DoorAction;
 using FluentValidation;
 using MediatR;
 
@@ -29,9 +29,14 @@ namespace Application.Commands.OpenDoor
             {
                 await _mediator.Publish(new DoorOpenFailed
                 {
-                    DoorId = request.DoorId,
-                    UserId = request.UserId,
-                    Comments = request.Comments,
+                    AuditLog = new Domain.Dto.AuditLogDto
+                    {
+                        DoorId = request.DoorId,
+                        UserId = request.UserId,
+                        Comments = request.Comments,
+                        EventTime = DateTime.UtcNow,
+                        Status = 0
+                    }
                 });
                 throw new ValidationException($"Door open failed: {result.Errors[0]}");
             }
@@ -39,9 +44,14 @@ namespace Application.Commands.OpenDoor
             //Validations success. Connect to the harware here and open the door
             await _mediator.Publish(new DoorOpenSuccess 
             {
-                DoorId = request.DoorId,
-                UserId = request.UserId,
-                Comments = request.Comments,
+                AuditLog = new Domain.Dto.AuditLogDto
+                {
+                    DoorId = request.DoorId,
+                    UserId = request.UserId,
+                    Comments = request.Comments,
+                    EventTime = DateTime.UtcNow,
+                    Status = 1
+                }
             });
         }
     }

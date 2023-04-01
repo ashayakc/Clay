@@ -7,8 +7,6 @@ namespace Domain.Mappings
     {
         public MappingProfile()
         {
-            //CreateMap<AuditLogDto, AuditLog>()
-            //    .ReverseMap();
             CreateMap<Door, DoorDto>();
         }
     }
