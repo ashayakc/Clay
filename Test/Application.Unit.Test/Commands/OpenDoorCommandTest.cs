@@ -1,5 +1,5 @@
 ﻿using Application.Commands.OpenDoor;
-using Application.Notifications.DoorOpened;
+using Application.Notifications.DoorAction;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
@@ -9,9 +9,9 @@ namespace Application.Unit.Test.Commands
 {
     public class OpenDoorCommandHandlerTests
     {
-        private Mock<IMediator> _mediatorMock;
-        private Mock<IValidator<OpenDoorCommand>> _validatorMock;
-        private OpenDoorCommandHandler _handler;
+        private readonly Mock<IMediator> _mediatorMock;
+        private readonly Mock<IValidator<OpenDoorCommand>> _validatorMock;
+        private readonly OpenDoorCommandHandler _handler;
 
         public OpenDoorCommandHandlerTests()
         {
@@ -21,61 +21,46 @@ namespace Application.Unit.Test.Commands
         }
 
         [Fact]
-        public async Task Handle_WhenValidationSucceeds_PublishesDoorOpenSuccess()
+        public async Task Handle_ValidRequest_PublishesDoorOpenSuccess()
         {
             // Arrange
-            var request = new OpenDoorCommand
+            var command = new OpenDoorCommand
             {
                 DoorId = 1,
-                UserId = 2,
-                RoleId = 3,
-                Comments = "Test comment"
+                UserId = 1,
+                RoleId = 1,
+                Comments = "Test"
             };
-
-            _validatorMock.Setup(v => v.ValidateAsync(request, default))
-                .ReturnsAsync(new ValidationResult());
+            var validationResult = new ValidationResult();
+            _validatorMock.Setup(v => v.ValidateAsync(command, default)).ReturnsAsync(validationResult);
 
             // Act
-            await _handler.Handle(request, default);
+            await _handler.Handle(command, default);
 
             // Assert
-            _mediatorMock.Verify(m => m.Publish(
-                It.Is<DoorOpenSuccess>(d => d.DoorId == request.DoorId && d.UserId == request.UserId && d.Comments == request.Comments),
-                default), Times.Once);
-
-            _mediatorMock.Verify(m => m.Publish(
-                It.IsAny<DoorAction>(), default), Times.Never);
+            _mediatorMock.Verify(m => m.Publish(It.Is<DoorOpenSuccess>(d => d.DoorId == command.DoorId && d.UserId == command.UserId && d.Comments == command.Comments), default), Times.Once);
         }
 
         [Fact]
-        public async Task Handle_WhenValidationFails_PublishesDoorOpenFailedAndThrowsValidationException()
+        public async Task Handle_InvalidRequest_PublishesDoorOpenFailedAndThrowsValidationException()
         {
             // Arrange
-            var request = new OpenDoorCommand
+            var command = new OpenDoorCommand
             {
                 DoorId = 1,
-                UserId = 2,
-                RoleId = 3,
-                Comments = "Test comment"
+                UserId = 1,
+                RoleId = 1,
+                Comments = "Test"
             };
+            var validationResult = new ValidationResult(new[] { new ValidationFailure("Comments", "Comments is required") });
+            _validatorMock.Setup(v => v.ValidateAsync(command, default)).ReturnsAsync(validationResult);
 
-            var validationErrors = new List<ValidationFailure>
-            {
-                new ValidationFailure("DoorId", "Door ID is invalid")
-            };
+            // Act and Assert
+            var ex = await Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(command, default));
+            Assert.Equal($"Door open failed: {validationResult.Errors[0]}", ex.Message);
 
-            _validatorMock.Setup(v => v.ValidateAsync(request, default))
-                .ReturnsAsync(new ValidationResult(validationErrors));
-
-            // Act & Assert
-            await Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(request, default));
-
-            _mediatorMock.Verify(m => m.Publish(
-                It.Is<DoorAction>(d => d.DoorId == request.DoorId && d.UserId == request.UserId && d.Comments == request.Comments),
-                default), Times.Once);
-
-            _mediatorMock.Verify(m => m.Publish(
-                It.IsAny<DoorOpenSuccess>(), default), Times.Never);
+            _mediatorMock.Verify(m => m.Publish(It.Is<DoorOpenFailed>(d => d.DoorId == command.DoorId && d.UserId == command.UserId && d.Comments == command.Comments), default), Times.Once);
         }
     }
+
 }

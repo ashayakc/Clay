@@ -25,33 +25,23 @@ namespace Application.Commands.OpenDoor
         public async Task Handle(OpenDoorCommand request, CancellationToken cancellationToken)
         {
             var result = await _validator.ValidateAsync(request, cancellationToken);
-            if(!result.IsValid) 
+            if (!result.IsValid)
             {
                 await _mediator.Publish(new DoorOpenFailed
                 {
-                    AuditLog = new Domain.Dto.AuditLogDto
-                    {
-                        DoorId = request.DoorId,
-                        UserId = request.UserId,
-                        Comments = request.Comments,
-                        EventTime = DateTime.UtcNow,
-                        Status = 0
-                    }
+                    DoorId = request.DoorId,
+                    UserId = request.UserId,
+                    Comments = request.Comments
                 });
                 throw new ValidationException($"Door open failed: {result.Errors[0]}");
             }
 
             //Validations success. Connect to the harware here and open the door
-            await _mediator.Publish(new DoorOpenSuccess 
+            await _mediator.Publish(new DoorOpenSuccess
             {
-                AuditLog = new Domain.Dto.AuditLogDto
-                {
-                    DoorId = request.DoorId,
-                    UserId = request.UserId,
-                    Comments = request.Comments,
-                    EventTime = DateTime.UtcNow,
-                    Status = 1
-                }
+                DoorId = request.DoorId,
+                UserId = request.UserId,
+                Comments = request.Comments,
             });
         }
     }

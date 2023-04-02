@@ -4,9 +4,11 @@ using API.Middlewares;
 using Application;
 using Application.Common.Interfaces;
 using Domain;
+using Domain.Dto;
 using Domain.Mappings;
 using Infrastructure;
 using Infrastructure.Persistance;
+using Infrastructure.Services;
 using MediatR;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -36,6 +38,7 @@ namespace API
             services.AddScoped<IRepository<Door>, Repository<Door>>();
             services.AddScoped<IRepository<User>, Repository<User>>();
             services.AddScoped<IRepository<RoleDoorMapping>, Repository<RoleDoorMapping>>();
+            services.AddScoped<IAuditService<AuditLogDto>, AuditService<AuditLogDto>>();
             services.AddApplicationServices();
 
             services.AddApiVersioning(config =>
