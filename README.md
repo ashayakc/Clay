@@ -53,7 +53,7 @@ Few key acitivites which takes place within servie:
 - Specflow
 
 ## Table Mapping:
-![image]()
+![image](https://user-images.githubusercontent.com/21059833/229355332-99d73452-eb80-4a01-9580-49c99fb6e66c.png)
 
 ## Testing:
 Unit tests are written using xUnit and can be made part of CI
