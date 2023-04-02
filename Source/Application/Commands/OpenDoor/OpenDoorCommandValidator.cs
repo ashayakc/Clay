@@ -6,9 +6,9 @@ namespace Application.Commands.OpenDoor
 {
     public class OpenDoorCommandValidator : AbstractValidator<OpenDoorCommand>
     {
-        private readonly IRepository<Door> _doorRepository;
-        private readonly IRepository<RoleDoorMapping> _roleDoorRepository;
-        public OpenDoorCommandValidator(IRepository<Door> doorRepository, IRepository<RoleDoorMapping> roleDoorRepository)
+        private readonly IGenericRepository<Door> _doorRepository;
+        private readonly IGenericRepository<RoleDoorMapping> _roleDoorRepository;
+        public OpenDoorCommandValidator(IGenericRepository<Door> doorRepository, IGenericRepository<RoleDoorMapping> roleDoorRepository)
         {
             _doorRepository = doorRepository;
             _roleDoorRepository = roleDoorRepository;

@@ -1,7 +1,10 @@
-﻿namespace Application.Common.Interfaces
+﻿using Domain.Dto;
+
+namespace Application.Common.Interfaces
 {
-    public interface IAuditService<T> where T : class
+    public interface IAuditService
     {
-        Task AuditAsync(T entity);
+        Task AuditAsync(AuditLogDto entity);
+        Task<List<AuditLogDto>> GeAuditAsync(int from, int size, long userId);
     }
 }

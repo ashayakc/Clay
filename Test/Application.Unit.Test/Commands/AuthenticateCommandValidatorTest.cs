@@ -9,12 +9,12 @@ namespace Application.Unit.Test.Commands
 {
     public class AuthenticateCommandValidatorTests
     {
-        private readonly Mock<IRepository<User>> _userRepositoryMock;
+        private readonly Mock<IGenericRepository<User>> _userRepositoryMock;
         private readonly AuthenticateCommandValidator _validator;
 
         public AuthenticateCommandValidatorTests()
         {
-            _userRepositoryMock = new Mock<IRepository<User>>();
+            _userRepositoryMock = new Mock<IGenericRepository<User>>();
             _validator = new AuthenticateCommandValidator(_userRepositoryMock.Object);
         }
 

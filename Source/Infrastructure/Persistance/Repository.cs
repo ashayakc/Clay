@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Persistance
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IGenericRepository<T> where T : class
     {
         private readonly LockDbContext _dbContext;
         private DbSet<T> _dbSet;

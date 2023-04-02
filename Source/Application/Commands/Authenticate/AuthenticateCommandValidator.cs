@@ -8,8 +8,8 @@ namespace Application.Commands.Authenticate
 {
     public class AuthenticateCommandValidator : AbstractValidator<AuthenticateCommand>
     {
-        private readonly IRepository<User> _userRepository;
-        public AuthenticateCommandValidator(IRepository<User> userRepository)
+        private readonly IGenericRepository<User> _userRepository;
+        public AuthenticateCommandValidator(IGenericRepository<User> userRepository)
         {
             _userRepository = userRepository;
 
@@ -31,7 +31,7 @@ namespace Application.Commands.Authenticate
             return _userRepository
                         .GetAll()
                         .AsEnumerable()
-                        .First(x => x.UserName.Equals(username, StringComparison.OrdinalIgnoreCase));
+                        .FirstOrDefault(x => x.UserName.Equals(username, StringComparison.OrdinalIgnoreCase))!;
         }
     }
 }

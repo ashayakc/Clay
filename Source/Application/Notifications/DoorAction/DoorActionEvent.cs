@@ -23,8 +23,8 @@ namespace Application.Notifications.DoorAction
     public class DoorActionHandler : INotificationHandler<DoorOpenFailed>,
         INotificationHandler<DoorOpenSuccess>
     {
-        private readonly IAuditService<AuditLogDto> _auditService;
-        public DoorActionHandler(IAuditService<AuditLogDto> auditService)
+        private readonly IAuditService _auditService;
+        public DoorActionHandler(IAuditService auditService)
         {
             _auditService = auditService;
         }

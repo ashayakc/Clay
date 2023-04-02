@@ -10,15 +10,15 @@ namespace Application.Unit.Test.Queries
 {
     public class GetDoorsQueryHandlerTests
     {
-        private readonly Mock<IRepository<User>> _userRepositoryMock;
-        private readonly Mock<IRepository<RoleDoorMapping>> _roleDoorRepositoryMock;
+        private readonly Mock<IGenericRepository<User>> _userRepositoryMock;
+        private readonly Mock<IGenericRepository<RoleDoorMapping>> _roleDoorRepositoryMock;
         private readonly IMapper _mapper;
         private GetDoorsQueryHandler _handler;
 
         public GetDoorsQueryHandlerTests()
         {
-            _userRepositoryMock = new Mock<IRepository<User>>();
-            _roleDoorRepositoryMock = new Mock<IRepository<RoleDoorMapping>>();
+            _userRepositoryMock = new Mock<IGenericRepository<User>>();
+            _roleDoorRepositoryMock = new Mock<IGenericRepository<RoleDoorMapping>>();
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<Door, DoorDto>();

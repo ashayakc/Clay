@@ -4,7 +4,6 @@ using API.Middlewares;
 using Application;
 using Application.Common.Interfaces;
 using Domain;
-using Domain.Dto;
 using Domain.Mappings;
 using Infrastructure;
 using Infrastructure.Persistance;
@@ -17,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using Nest;
 
 namespace API
 {
@@ -35,11 +35,17 @@ namespace API
             services.AddSingleton(appConfig);
 
             services.AddScoped<IClaimsHandler, ClaimsHandler>();
-            services.AddScoped<IRepository<Door>, Repository<Door>>();
-            services.AddScoped<IRepository<User>, Repository<User>>();
-            services.AddScoped<IRepository<RoleDoorMapping>, Repository<RoleDoorMapping>>();
-            services.AddScoped<IAuditService<AuditLogDto>, AuditService<AuditLogDto>>();
+            services.AddScoped<IGenericRepository<Door>, Repository<Door>>();
+            services.AddScoped<IGenericRepository<User>, Repository<User>>();
+            services.AddScoped<IGenericRepository<RoleDoorMapping>, Repository<RoleDoorMapping>>();
+            services.AddScoped<IAuditService, AuditService>();
             services.AddApplicationServices();
+
+            var settings = new ConnectionSettings(new Uri(appConfig.ElasticUrl))
+                .BasicAuthentication(appConfig.ElasticUserName, appConfig.ElasticPassword)
+                            .DefaultIndex(appConfig.IndexName);
+            var client = new ElasticClient(settings);
+            services.AddSingleton<IElasticClient>(provider => client);
 
             services.AddApiVersioning(config =>
             {
@@ -105,11 +111,8 @@ namespace API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+            app.UseSwagger();
+            app.UseSwaggerUI();
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
             app.UseRouting();

@@ -18,9 +18,9 @@ namespace Application.Commands.Authenticate
 
     public class AuthenticateCommandHandler : IRequestHandler<AuthenticateCommand, string>
     {
-        private readonly IRepository<User> _userRepository;
+        private readonly IGenericRepository<User> _userRepository;
         private readonly IValidator<AuthenticateCommand> _validator;
-        public AuthenticateCommandHandler(IRepository<User> userRepository, IValidator<AuthenticateCommand> validator)
+        public AuthenticateCommandHandler(IGenericRepository<User> userRepository, IValidator<AuthenticateCommand> validator)
         {
             _userRepository = userRepository;
             _validator = validator;

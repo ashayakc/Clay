@@ -15,10 +15,10 @@ namespace Application.Queries
 
     public class GetDoorsQueryHandler : IRequestHandler<GetDoorsQuery, List<DoorDto>>
     {
-        private readonly IRepository<User> _userRepository;
-        private readonly IRepository<RoleDoorMapping> _roleDoorRepository;
+        private readonly IGenericRepository<User> _userRepository;
+        private readonly IGenericRepository<RoleDoorMapping> _roleDoorRepository;
         private readonly IMapper _mapper;
-        public GetDoorsQueryHandler(IRepository<User> repository, IRepository<RoleDoorMapping> roleDoorRepository, IMapper mapper)
+        public GetDoorsQueryHandler(IGenericRepository<User> repository, IGenericRepository<RoleDoorMapping> roleDoorRepository, IMapper mapper)
         {
             _userRepository = repository;
             _roleDoorRepository = roleDoorRepository;

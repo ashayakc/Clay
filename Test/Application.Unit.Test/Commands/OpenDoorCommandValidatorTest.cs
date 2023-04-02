@@ -7,14 +7,14 @@ namespace Application.Unit.Test.Commands
 {
     public class OpenDoorCommandValidatorTests
     {
-        private readonly Mock<IRepository<Door>> _doorRepositoryMock;
-        private readonly Mock<IRepository<RoleDoorMapping>> _roleDoorRepositoryMock;
+        private readonly Mock<IGenericRepository<Door>> _doorRepositoryMock;
+        private readonly Mock<IGenericRepository<RoleDoorMapping>> _roleDoorRepositoryMock;
         private readonly OpenDoorCommandValidator _validator;
 
         public OpenDoorCommandValidatorTests()
         {
-            _doorRepositoryMock = new Mock<IRepository<Door>>();
-            _roleDoorRepositoryMock = new Mock<IRepository<RoleDoorMapping>>();
+            _doorRepositoryMock = new Mock<IGenericRepository<Door>>();
+            _roleDoorRepositoryMock = new Mock<IGenericRepository<RoleDoorMapping>>();
             _validator = new OpenDoorCommandValidator(_doorRepositoryMock.Object, _roleDoorRepositoryMock.Object);
         }
 

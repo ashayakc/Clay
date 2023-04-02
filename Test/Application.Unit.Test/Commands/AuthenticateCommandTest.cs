@@ -10,13 +10,13 @@ namespace Application.Unit.Test.Commands
 {
     public class AuthenticateCommandHandlerTests
     {
-        private readonly Mock<IRepository<User>> _mockUserRepository;
+        private readonly Mock<IGenericRepository<User>> _mockUserRepository;
         private readonly Mock<IValidator<AuthenticateCommand>> _mockValidator;
         private readonly AuthenticateCommandHandler _handler;
 
         public AuthenticateCommandHandlerTests()
         {
-            _mockUserRepository = new Mock<IRepository<User>>();
+            _mockUserRepository = new Mock<IGenericRepository<User>>();
             _mockValidator = new Mock<IValidator<AuthenticateCommand>>();
             _handler = new AuthenticateCommandHandler(_mockUserRepository.Object, _mockValidator.Object);
         }
