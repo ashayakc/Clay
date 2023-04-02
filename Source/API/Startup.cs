@@ -1,10 +1,12 @@
 ﻿using API.Authorization;
 using API.Configuration;
 using API.Middlewares;
-using Application;
+using Application.Commands.Authenticate;
+using Application.Common.Behaviours;
 using Application.Common.Interfaces;
 using Domain;
 using Domain.Mappings;
+using FluentValidation;
 using Infrastructure;
 using Infrastructure.Persistance;
 using Infrastructure.Services;
@@ -13,7 +15,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Nest;
@@ -39,7 +40,6 @@ namespace API
             services.AddScoped<IGenericRepository<User>, Repository<User>>();
             services.AddScoped<IGenericRepository<RoleDoorMapping>, Repository<RoleDoorMapping>>();
             services.AddScoped<IAuditService, AuditService>();
-            services.AddApplicationServices();
 
             var settings = new ConnectionSettings(new Uri(appConfig.ElasticUrl))
                 .BasicAuthentication(appConfig.ElasticUserName, appConfig.ElasticPassword)
@@ -53,6 +53,7 @@ namespace API
                 config.AssumeDefaultVersionWhenUnspecified = true;
             });
 
+            services.AddValidatorsFromAssembly(AppDomain.CurrentDomain.GetAssemblies().SingleOrDefault(assembly => assembly.GetName().Name == "Application"));
             services.AddAutoMapper(x => x.AddProfile(new MappingProfile()));
 
             services.AddDbContext<LockDbContext>(options =>
@@ -61,13 +62,14 @@ namespace API
             services.AddMediatR((config) =>
             {
                 config.RegisterServicesFromAssemblyContaining(typeof(Startup));
+                config.RegisterServicesFromAssemblyContaining(typeof(AuthenticateCommandValidator));
+                config.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             });
             services.AddJwtAuthentication();
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
                 c.EnableAnnotations();
-                c.OperationFilter<ApiOperationFilter>();
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 

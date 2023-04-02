@@ -27,6 +27,19 @@ services:
     networks:
       - elastic
 
+  app:
+    container_name: "lock-api"
+    build: .
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    entrypoint: "dotnet API.dll"
+    ports:
+      - 5000:5000
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+
 networks:
     elastic:
       driver: bridge

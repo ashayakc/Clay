@@ -1,10 +1,9 @@
 using API.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Domain.Dto;
-using MediatR;
 using Application.Commands.OpenDoor;
 using Application.Queries;
-using Microsoft.AspNetCore.Authorization;
+using Domain.Dto;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
